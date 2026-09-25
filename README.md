@@ -13,7 +13,7 @@ API REST para uma plataforma de vitrine de projetos de desenvolvedores. Permite 
 
 
 ## Estrutura do projeto
-
+```
 devshowcase-api/
 ├── app/
 │   ├── main.py              # ponto de entrada da aplicação
