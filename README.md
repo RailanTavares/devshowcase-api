@@ -46,9 +46,9 @@ devshowcase-api/
 >>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 ├── requirements.txt
 ├── .gitignore
-├── .env.example
+├── .env
 └── README.md
-
+```
 ## Endpoints implementados
 
 | Método | Rota                        | Descrição                              |
@@ -68,11 +68,6 @@ devshowcase-api/
 - `repository_url`, `demo_url`, `github_url`, `avatar_url`: validados como URLs válidas (HttpUrl do Pydantic).
 - `name` da tecnologia: obrigatório, não vazio.
 - Regras de negócio: não permite dois perfis com o mesmo e-mail, nem duas tecnologias com o mesmo nome; não permite criar projeto para um perfil inexistente.
-
-## Testando com Postman
-
-Importe o arquivo `DevShowcase_API.postman_collection.json` (na raiz do projeto) no Postman para testar todos os endpoints já configurados.
-<<<<<<< HEAD
 
 ## Painel de testes visual (alternativa ao Postman)
 
