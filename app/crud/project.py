@@ -24,11 +24,20 @@ def create_project(db: Session, data: ProjectCreate) -> Project:
     return project
 
 
+<<<<<<< HEAD
 def get_all_projects(db: Session, skip: int = 0, limit: int = 100, technology_id: int = None) -> List[Project]:
     query = db.query(Project).options(joinedload(Project.technologies))
     if technology_id:
         query = query.filter(Project.technologies.any(id=technology_id))
     return query.offset(skip).limit(limit).all()
+=======
+def get_all_projects(db: Session) -> List[Project]:
+    return (
+        db.query(Project)
+        .options(joinedload(Project.technologies))
+        .all()
+    )
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 
 
 def get_project_by_id(db: Session, project_id: int) -> Project:

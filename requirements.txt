@@ -4,9 +4,4 @@ sqlalchemy>=2.0
 pydantic>=2.9
 email-validator>=2.2
 python-dotenv>=1.0
-
-# psycopg2-binary é necessário SOMENTE se você for usar PostgreSQL (via DATABASE_URL).
-# Por padrão o projeto usa SQLite e não precisa dele. Se for usar PostgreSQL, rode:
-#   pip install psycopg2-binary
-# (Se der erro de compilação, procure a versão pré-compilada certa para seu Python/SO
-# em https://pypi.org/project/psycopg2-binary/#files)
+psycopg2-binary>=2.9

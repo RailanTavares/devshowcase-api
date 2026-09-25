@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text, Float
+=======
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -28,8 +32,11 @@ class Project(Base):
     description = Column(Text, nullable=True)
     repository_url = Column(String(300), nullable=False)
     demo_url = Column(String(300), nullable=True)
+<<<<<<< HEAD
     average_rating = Column(Float, default=0.0)
     upvotes = Column(Integer, default=0)
+=======
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 
     profile_id = Column(Integer, ForeignKey("profiles.id"), nullable=False)
 

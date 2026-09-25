@@ -7,7 +7,11 @@ class FeedbackCreate(BaseModel):
     author_name: str = Field(..., min_length=1, max_length=150)
     comment: str = Field(..., min_length=1, max_length=1000)
     rating: int = Field(..., ge=1, le=5, description="Nota de 1 a 5")
+<<<<<<< HEAD
     # project_id será pegue pela rota, não precisa no corpo (ou se mantido, pode ser sobrescrito)
+=======
+    project_id: int = Field(..., gt=0)
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 
 
 class FeedbackOut(BaseModel):

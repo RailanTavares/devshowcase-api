@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from pathlib import Path
 
 from fastapi import FastAPI, Request, status
@@ -5,6 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+=======
+from fastapi import FastAPI
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 
 from app.database import Base, engine
 from app import models  # noqa: F401 - garante que todos os models sejam registrados
@@ -20,6 +24,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
+<<<<<<< HEAD
 # Libera CORS (útil para o Postman e para acessos externos). Mesmo assim, o
 # painel de testes é servido pela própria API (rota /painel) para evitar
 # bloqueios de "Private Network Access" que alguns navegadores aplicam quando
@@ -32,10 +37,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+=======
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 app.include_router(profiles.router)
 app.include_router(technologies.router)
 app.include_router(projects.router)
 
+<<<<<<< HEAD
 # Caminho do painel de testes HTML, que fica na raiz do projeto (um nível acima de app/)
 TESTER_HTML_PATH = Path(__file__).resolve().parent.parent / "devshowcase-tester.html"
 
@@ -68,6 +76,8 @@ def painel():
     """Serve o painel de testes visual na mesma origem da API (evita bloqueio de CORS)."""
     return FileResponse(TESTER_HTML_PATH)
 
+=======
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 
 @app.get("/", tags=["Health"])
 def root():

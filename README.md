@@ -50,17 +50,21 @@ devshowcase-api/
 │       ├── profiles.py
 │       ├── projects.py
 │       └── technologies.py
+<<<<<<< HEAD
 ├── scripts/
 │   ├── setup.sh / setup.bat     # cria venv, instala deps e popula o banco
 │   ├── run.sh / run.bat         # sobe o servidor rapidamente
 │   ├── reset_db.sh              # apaga e recria os dados de exemplo
 │   └── seed_data.py             # popula o banco com dados de exemplo
+=======
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 ├── requirements.txt
 ├── .gitignore
 ├── .env.example
 └── README.md
 ```
 
+<<<<<<< HEAD
 ## Início rápido (automatizado) — recomendado para gravar o vídeo
 
 Rode um único comando para criar o ambiente, instalar as dependências e já popular
@@ -99,6 +103,9 @@ criar nada na hora da gravação. Ainda assim, recomendamos demonstrar pelo meno
 `POST` de cada recurso ao vivo, para provar que as validações funcionam.
 
 ## Como rodar o projeto manualmente
+=======
+## Como rodar o projeto
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 
 1. Clone o repositório e entre na pasta:
    ```bash
@@ -186,6 +193,7 @@ curl -X POST http://127.0.0.1:8000/api/projects \
 ## Testando com Postman
 
 Importe o arquivo `DevShowcase_API.postman_collection.json` (na raiz do projeto) no Postman para testar todos os endpoints já configurados.
+<<<<<<< HEAD
 
 ## Painel de testes visual (alternativa ao Postman)
 
@@ -205,3 +213,5 @@ Como usar (forma correta):
 Essa página é só uma ferramenta extra de demonstração; ela não faz parte da
 avaliação da API em si, mas ajuda a mostrar os 6 endpoints de forma mais visual
 durante a gravação do vídeo, como alternativa ao Postman.
+=======
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70

@@ -41,8 +41,11 @@ class ProjectOut(BaseModel):
     description: Optional[str] = None
     repository_url: str
     demo_url: Optional[str] = None
+<<<<<<< HEAD
     average_rating: float = 0.0
     upvotes: int = 0
+=======
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
     profile_id: int
     technologies: List[TechnologyOut] = []
 

@@ -1,14 +1,25 @@
+<<<<<<< HEAD
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
+=======
+from typing import List
+
+from fastapi import APIRouter, Depends, HTTPException, status
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 from sqlalchemy.orm import Session
 
 from app.crud import profile as profile_crud
 from app.crud import project as project_crud
+<<<<<<< HEAD
 from app.crud import feedback as feedback_crud
 from app.database import get_db
 from app.schemas.project import ProjectCreate, ProjectOut
 from app.schemas.feedback import FeedbackCreate, FeedbackOut
+=======
+from app.database import get_db
+from app.schemas.project import ProjectCreate, ProjectOut
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
 
 router = APIRouter(prefix="/api/projects", tags=["Projects"])
 
@@ -26,6 +37,7 @@ def create_project(data: ProjectCreate, db: Session = Depends(get_db)):
 
 
 @router.get("", response_model=List[ProjectOut])
+<<<<<<< HEAD
 def list_projects(
     db: Session = Depends(get_db),
     skip: int = Query(0, ge=0, description="Pular N registros (paginação)"),
@@ -56,3 +68,8 @@ def upvote_project(id: int, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(project)
     return project
+=======
+def list_projects(db: Session = Depends(get_db)):
+    """Lista todos os projetos cadastrados."""
+    return project_crud.get_all_projects(db)
+>>>>>>> 2e8eda9a8d67dc8a2cbc43f1b17f27ba98712a70
