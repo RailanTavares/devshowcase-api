@@ -1,0 +1,81 @@
+{
+  "info": {
+    "name": "DevShowcase API",
+    "description": "Coleção de testes dos endpoints da DevShowcase API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" }
+  ],
+  "item": [
+    {
+      "name": "Profiles",
+      "item": [
+        {
+          "name": "Criar Perfil",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Maria Silva\",\n  \"email\": \"maria@email.com\",\n  \"bio\": \"Desenvolvedora fullstack apaixonada por APIs\",\n  \"github_url\": \"https://github.com/mariasilva\",\n  \"avatar_url\": \"https://example.com/avatar.png\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/profiles", "host": ["{{base_url}}"], "path": ["api", "profiles"] }
+          }
+        },
+        {
+          "name": "Buscar Perfil por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/profiles/1", "host": ["{{base_url}}"], "path": ["api", "profiles", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Technologies",
+      "item": [
+        {
+          "name": "Criar Tecnologia",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"FastAPI\"\n}" },
+            "url": { "raw": "{{base_url}}/api/technologies", "host": ["{{base_url}}"], "path": ["api", "technologies"] }
+          }
+        },
+        {
+          "name": "Listar Tecnologias",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/technologies", "host": ["{{base_url}}"], "path": ["api", "technologies"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Criar Projeto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"DevShowcase API\",\n  \"description\": \"Backend do projeto da faculdade, feito com FastAPI\",\n  \"repository_url\": \"https://github.com/mariasilva/devshowcase-api\",\n  \"demo_url\": \"https://devshowcase-demo.com\",\n  \"profile_id\": 1,\n  \"technology_ids\": [1]\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/projects", "host": ["{{base_url}}"], "path": ["api", "projects"] }
+          }
+        },
+        {
+          "name": "Listar Projetos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/projects", "host": ["{{base_url}}"], "path": ["api", "projects"] }
+          }
+        }
+      ]
+    }
+  ]
+}

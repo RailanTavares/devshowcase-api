@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DevShowcase API — Painel de Testes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0e1420;
+    --panel: #161d2e;
+    --panel-2: #1c2438;
+    --border: #2a3348;
+    --text: #e7eaf1;
+    --muted: #8b93a7;
+    --accent: #4fd1ae;
+    --accent-dim: #2e6b5a;
+    --danger: #ff6b6b;
+    --danger-dim: #6b2e2e;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --display: 'Space Grotesk', sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; background:var(--bg); color:var(--text); font-family:var(--sans); }
+  body{ min-height:100vh; }
+
+  .app{ display:grid; grid-template-columns: 260px 1fr; min-height:100vh; }
+
+  /* Sidebar */
+  .sidebar{ background:var(--panel); border-right:1px solid var(--border); padding:20px 14px; display:flex; flex-direction:column; gap:18px; }
+  .brand{ display:flex; flex-direction:column; gap:2px; padding:4px 8px 12px; border-bottom:1px solid var(--border); }
+  .brand .name{ font-family:var(--display); font-size:17px; font-weight:700; letter-spacing:-0.01em; }
+  .brand .tag{ font-family:var(--mono); font-size:11px; color:var(--muted); }
+
+  .group-label{ font-family:var(--mono); font-size:10.5px; color:var(--muted); padding:0 8px; margin-top:6px; }
+  nav{ display:flex; flex-direction:column; gap:2px; }
+  .nav-item{
+    display:flex; align-items:center; gap:8px; padding:9px 10px; border-radius:6px;
+    cursor:pointer; font-size:13.5px; color:var(--text); border:1px solid transparent;
+    background:transparent;
+  }
+  .nav-item:hover{ background:var(--panel-2); }
+  .nav-item.active{ background:var(--panel-2); border-color:var(--border); }
+  .method-tag{
+    font-family:var(--mono); font-size:10px; font-weight:600; padding:2px 6px; border-radius:4px;
+    min-width:38px; text-align:center;
+  }
+  .method-tag.get{ background:rgba(79,209,174,0.15); color:var(--accent); }
+  .method-tag.post{ background:rgba(255,178,107,0.15); color:#ffb26b; }
+
+  .base-url-box{ margin-top:auto; padding-top:12px; border-top:1px solid var(--border); }
+  .base-url-box label{ font-family:var(--mono); font-size:10.5px; color:var(--muted); display:block; margin-bottom:6px; }
+  .base-url-box input{
+    width:100%; background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    font-family:var(--mono); font-size:12px; padding:8px 9px; border-radius:6px;
+  }
+  .status-ping{ margin-top:8px; font-family:var(--mono); font-size:11px; color:var(--muted); display:flex; align-items:center; gap:6px; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--muted); flex-shrink:0; }
+  .dot.online{ background:var(--accent); }
+  .dot.offline{ background:var(--danger); }
+
+  /* Main */
+  main{ padding:32px 40px; max-width:900px; }
+  .op-header{ margin-bottom:22px; }
+  .op-header .route{ font-family:var(--mono); font-size:13px; color:var(--muted); display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .op-header h1{ font-family:var(--display); font-size:24px; margin:0; font-weight:600; letter-spacing:-0.01em; }
+  .op-header p{ color:var(--muted); font-size:13.5px; margin:6px 0 0; max-width:60ch; line-height:1.5; }
+
+  .card{ background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:22px; margin-bottom:20px; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:12.5px; color:var(--muted); margin-bottom:5px; }
+  .field label .req{ color:var(--danger); }
+  .field input, .field textarea{
+    width:100%; background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    font-family:var(--mono); font-size:13px; padding:9px 10px; border-radius:6px; resize:vertical;
+  }
+  .field input:focus, .field textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  .field .hint{ font-size:11px; color:var(--muted); margin-top:4px; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+  .actions{ display:flex; align-items:center; gap:12px; margin-top:6px; }
+  button.submit{
+    background:var(--accent); color:#0a1712; border:none; font-family:var(--sans); font-weight:600;
+    font-size:13.5px; padding:10px 18px; border-radius:7px; cursor:pointer;
+  }
+  button.submit:hover{ filter:brightness(1.08); }
+  button.submit:disabled{ opacity:0.6; cursor:default; }
+  .actions .spinner{ font-family:var(--mono); font-size:12px; color:var(--muted); }
+
+  .console{ background:#0a0f18; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .console-head{
+    display:flex; align-items:center; justify-content:space-between; padding:10px 14px;
+    border-bottom:1px solid var(--border); font-family:var(--mono); font-size:11.5px; color:var(--muted);
+  }
+  .badge{ font-family:var(--mono); font-size:11px; font-weight:600; padding:3px 8px; border-radius:5px; }
+  .badge.ok{ background:rgba(79,209,174,0.15); color:var(--accent); }
+  .badge.err{ background:rgba(255,107,107,0.15); color:var(--danger); }
+  .badge.idle{ background:var(--panel-2); color:var(--muted); }
+  pre.response{
+    margin:0; padding:16px; font-family:var(--mono); font-size:12.5px; line-height:1.6;
+    color:var(--text); white-space:pre-wrap; word-break:break-word; max-height:340px; overflow:auto;
+  }
+  pre.response.empty{ color:var(--muted); }
+
+  @media (max-width: 760px){
+    .app{ grid-template-columns:1fr; }
+    .sidebar{ border-right:none; border-bottom:1px solid var(--border); }
+    main{ padding:22px; }
+    .row2{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="name">DevShowcase</span>
+      <span class="tag">painel de testes da API</span>
+    </div>
+
+    <div>
+      <div class="group-label">PROFILES</div>
+      <nav>
+        <div class="nav-item active" data-op="create-profile"><span class="method-tag post">POST</span> Cadastrar perfil</div>
+        <div class="nav-item" data-op="get-profile"><span class="method-tag get">GET</span> Buscar por id</div>
+      </nav>
+    </div>
+
+    <div>
+      <div class="group-label">TECHNOLOGIES</div>
+      <nav>
+        <div class="nav-item" data-op="create-tech"><span class="method-tag post">POST</span> Cadastrar tecnologia</div>
+        <div class="nav-item" data-op="list-tech"><span class="method-tag get">GET</span> Listar tecnologias</div>
+      </nav>
+    </div>
+
+    <div>
+      <div class="group-label">PROJECTS</div>
+      <nav>
+        <div class="nav-item" data-op="create-project"><span class="method-tag post">POST</span> Cadastrar projeto</div>
+        <div class="nav-item" data-op="list-projects"><span class="method-tag get">GET</span> Listar projetos</div>
+      </nav>
+    </div>
+
+    <div class="base-url-box">
+      <label for="base-url">URL BASE DA API</label>
+      <input id="base-url" type="text" value="http://127.0.0.1:8000" spellcheck="false" />
+      <div class="status-ping"><span class="dot" id="status-dot"></span><span id="status-text">verificando...</span></div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="op-header">
+      <div class="route"><span class="method-tag post" id="op-method">POST</span><span id="op-route">/api/profiles</span></div>
+      <h1 id="op-title">Cadastrar perfil</h1>
+      <p id="op-desc">Cria um novo perfil de desenvolvedor. Nome e e-mail são obrigatórios; as URLs, se preenchidas, precisam ser válidas.</p>
+    </div>
+
+    <div class="card" id="form-card"></div>
+
+    <div class="console">
+      <div class="console-head">
+        <span id="console-label">resposta</span>
+        <span class="badge idle" id="status-badge">aguardando</span>
+      </div>
+      <pre class="response empty" id="response-box">Preencha os campos acima e clique em enviar.</pre>
+    </div>
+  </main>
+</div>
+
+<script>
+const ops = {
+  "create-profile": {
+    method: "POST", path: "/api/profiles", title: "Cadastrar perfil",
+    desc: "Cria um novo perfil de desenvolvedor. Nome e e-mail são obrigatórios; as URLs, se preenchidas, precisam ser válidas.",
+    fields: [
+      { name: "full_name", label: "Nome completo", required: true, placeholder: "Maria Silva" },
+      { name: "email", label: "E-mail", required: true, placeholder: "maria@email.com" },
+      { name: "bio", label: "Bio", type: "textarea", placeholder: "Desenvolvedora fullstack..." },
+      { name: "github_url", label: "URL do GitHub", placeholder: "https://github.com/mariasilva" },
+      { name: "avatar_url", label: "URL do avatar", placeholder: "https://exemplo.com/avatar.png" },
+    ],
+    submitLabel: "Cadastrar perfil",
+    buildBody(values){
+      const body = { full_name: values.full_name, email: values.email };
+      if (values.bio) body.bio = values.bio;
+      if (values.github_url) body.github_url = values.github_url;
+      if (values.avatar_url) body.avatar_url = values.avatar_url;
+      return body;
+    },
+  },
+  "get-profile": {
+    method: "GET", path: "/api/profiles/{id}", title: "Buscar perfil por id",
+    desc: "Retorna os dados de um perfil já cadastrado, a partir do id.",
+    fields: [ { name: "id", label: "ID do perfil", required: true, placeholder: "1" } ],
+    submitLabel: "Buscar perfil",
+    buildPath(values){ return `/api/profiles/${encodeURIComponent(values.id)}`; },
+  },
+  "create-tech": {
+    method: "POST", path: "/api/technologies", title: "Cadastrar tecnologia",
+    desc: "Cria uma nova tecnologia. O nome é obrigatório e não pode ser vazio.",
+    fields: [ { name: "name", label: "Nome da tecnologia", required: true, placeholder: "FastAPI" } ],
+    submitLabel: "Cadastrar tecnologia",
+    buildBody(values){ return { name: values.name }; },
+  },
+  "list-tech": {
+    method: "GET", path: "/api/technologies", title: "Listar tecnologias",
+    desc: "Retorna todas as tecnologias cadastradas.",
+    fields: [],
+    submitLabel: "Listar tecnologias",
+  },
+  "create-project": {
+    method: "POST", path: "/api/projects", title: "Cadastrar projeto",
+    desc: "Cria um novo projeto vinculado a um perfil e a uma ou mais tecnologias já existentes. Título e URL do repositório são obrigatórios.",
+    fields: [
+      { name: "title", label: "Título", required: true, placeholder: "DevShowcase API" },
+      { name: "description", label: "Descrição", type: "textarea", placeholder: "Backend do projeto da faculdade..." },
+      { name: "repository_url", label: "URL do repositório", required: true, placeholder: "https://github.com/mariasilva/devshowcase-api" },
+      { name: "demo_url", label: "URL da demo", placeholder: "https://devshowcase-demo.com" },
+      { name: "profile_id", label: "ID do perfil", required: true, placeholder: "1", half: true },
+      { name: "technology_ids", label: "IDs das tecnologias", required: true, placeholder: "1, 2", half: true, hint: "separados por vírgula" },
+    ],
+    submitLabel: "Cadastrar projeto",
+    buildBody(values){
+      const body = {
+        title: values.title,
+        repository_url: values.repository_url,
+        profile_id: Number(values.profile_id),
+        technology_ids: (values.technology_ids || "").split(",").map(s => s.trim()).filter(Boolean).map(Number),
+      };
+      if (values.description) body.description = values.description;
+      if (values.demo_url) body.demo_url = values.demo_url;
+      return body;
+    },
+  },
+  "list-projects": {
+    method: "GET", path: "/api/projects", title: "Listar projetos",
+    desc: "Retorna todos os projetos cadastrados, com as tecnologias vinculadas a cada um.",
+    fields: [],
+    submitLabel: "Listar projetos",
+  },
+};
+
+let currentOp = "create-profile";
+
+const formCard = document.getElementById("form-card");
+const opTitle = document.getElementById("op-title");
+const opDesc = document.getElementById("op-desc");
+const opRoute = document.getElementById("op-route");
+const opMethod = document.getElementById("op-method");
+const responseBox = document.getElementById("response-box");
+const statusBadge = document.getElementById("status-badge");
+const consoleLabel = document.getElementById("console-label");
+const baseUrlInput = document.getElementById("base-url");
+const statusDot = document.getElementById("status-dot");
+const statusText = document.getElementById("status-text");
+
+function renderForm(opKey){
+  const op = ops[opKey];
+  opTitle.textContent = op.title;
+  opDesc.textContent = op.desc;
+  opRoute.textContent = op.path;
+  opMethod.textContent = op.method;
+  opMethod.className = "method-tag " + op.method.toLowerCase();
+
+  document.querySelectorAll(".nav-item").forEach(el => el.classList.toggle("active", el.dataset.op === opKey));
+
+  if (op.fields.length === 0){
+    formCard.innerHTML = `<div class="actions">
+      <button class="submit" id="submit-btn">${op.submitLabel}</button>
+      <span class="spinner" id="spinner"></span>
+    </div>`;
+  } else {
+    let rowsHtml = "";
+    let i = 0;
+    while (i < op.fields.length){
+      const f = op.fields[i];
+      if (f.half && op.fields[i+1] && op.fields[i+1].half){
+        const f2 = op.fields[i+1];
+        rowsHtml += `<div class="row2">${fieldHtml(f)}${fieldHtml(f2)}</div>`;
+        i += 2;
+      } else {
+        rowsHtml += fieldHtml(f);
+        i += 1;
+      }
+    }
+    formCard.innerHTML = rowsHtml + `<div class="actions">
+      <button class="submit" id="submit-btn">${op.submitLabel}</button>
+      <span class="spinner" id="spinner"></span>
+    </div>`;
+  }
+
+  document.getElementById("submit-btn").addEventListener("click", () => runOp(opKey));
+  responseBox.textContent = "Preencha os campos acima e clique em enviar.";
+  responseBox.classList.add("empty");
+  statusBadge.textContent = "aguardando";
+  statusBadge.className = "badge idle";
+  consoleLabel.textContent = "resposta";
+}
+
+function fieldHtml(f){
+  const tag = f.type === "textarea" ? "textarea rows=\"2\"" : "input type=\"text\"";
+  const closeTag = f.type === "textarea" ? "></textarea>" : " />";
+  return `<div class="field">
+    <label>${f.label}${f.required ? ' <span class="req">*</span>' : ""}</label>
+    <${tag} id="fld-${f.name}" placeholder="${f.placeholder || ""}"${closeTag}
+    ${f.hint ? `<div class="hint">${f.hint}</div>` : ""}
+  </div>`;
+}
+
+async function runOp(opKey){
+  const op = ops[opKey];
+  const btn = document.getElementById("submit-btn");
+  const spinner = document.getElementById("spinner");
+  const values = {};
+  for (const f of op.fields){
+    const el = document.getElementById(`fld-${f.name}`);
+    values[f.name] = el.value.trim();
+    if (f.required && !values[f.name]){
+      showResult(false, `Campo obrigatório vazio: ${f.label}`);
+      return;
+    }
+  }
+
+  const base = baseUrlInput.value.trim().replace(/\/$/, "");
+  const path = op.buildPath ? op.buildPath(values) : op.path;
+  const url = base + path;
+
+  btn.disabled = true;
+  spinner.textContent = "enviando...";
+  try {
+    const options = { method: op.method, headers: {} };
+    if (op.buildBody){
+      options.headers["Content-Type"] = "application/json";
+      options.body = JSON.stringify(op.buildBody(values));
+    }
+    const res = await fetch(url, options);
+    let data;
+    try { data = await res.json(); } catch(e) { data = null; }
+    showResult(res.ok, JSON.stringify(data, null, 2), res.status);
+  } catch (err) {
+    showResult(false, `Falha ao conectar em ${url}\n\n${err.message}\n\nVerifique se o servidor está rodando (scripts/run.sh ou scripts\\run.bat) e se a URL base está correta.`);
+  } finally {
+    btn.disabled = false;
+    spinner.textContent = "";
+  }
+}
+
+function showResult(ok, text, status){
+  responseBox.textContent = text;
+  responseBox.classList.remove("empty");
+  statusBadge.textContent = status ? `${status} ${ok ? "OK" : "ERRO"}` : (ok ? "ok" : "erro");
+  statusBadge.className = "badge " + (ok ? "ok" : "err");
+  consoleLabel.textContent = "resposta";
+}
+
+document.querySelectorAll(".nav-item").forEach(el => {
+  el.addEventListener("click", () => { currentOp = el.dataset.op; renderForm(currentOp); });
+});
+
+async function pingApi(){
+  const base = baseUrlInput.value.trim().replace(/\/$/, "");
+  try {
+    const res = await fetch(base + "/", { method: "GET" });
+    if (res.ok){
+      statusDot.className = "dot online";
+      statusText.textContent = "API online";
+    } else {
+      statusDot.className = "dot offline";
+      statusText.textContent = "API respondeu com erro";
+    }
+  } catch (e) {
+    statusDot.className = "dot offline";
+    statusText.textContent = "API offline / CORS bloqueado";
+  }
+}
+
+baseUrlInput.addEventListener("change", pingApi);
+renderForm(currentOp);
+pingApi();
+setInterval(pingApi, 8000);
+</script>
+</body>
+</html>

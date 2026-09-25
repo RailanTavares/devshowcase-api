@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: devshowcase-api
+    env: python
+    buildCommand: "pip install -r requirements.txt && pip install psycopg2-binary"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: DATABASE_URL
+        sync: false # Set this in the Render Dashboard from your provisioned DB
